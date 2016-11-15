@@ -11,10 +11,40 @@ app.set('port', process.env.PORT || 3000);
 app.use(express.static(__dirname + '/client'));
 
 io.on('connection', function(socket) {
-  console.log('User has connected');
 
   socket.on('disconnect', function() {
-    console.log('User has disconnected');
+    // REMOVE USER FROM connectedUsers
+    console.log('Connected Users.');
+    console.log(connectedUsers);
+    var disconnectedUser = _.without(connectedUsers, _.findWhere(connectedUsers, { connectionId: socket.id }));
+    console.log('Disconnected User.');
+    console.log(disconnectedUser);
+
+    //connectedUsers = [ { connectionId: 'jqerhPu7sDqk-5fJAAAD', username: 'andy' } ];
+
+    if (disconnectedUser) {
+      connectedUsers = disconnectedUser;
+    }
+
+    io.emit('updateUsersList', _.pluck(connectedUsers, 'username'));
+  });
+
+  socket.on('submitUser', function(data) {
+    //  CHECK IF USERNAME ALREADY EXISTS 
+    if (_.findWhere(connectedUsers, { username: data.username })) {
+      socket.emit('usernameRejected');
+    } else {
+      console.log('Pushing user onto stack - %s', data.username);
+      connectedUsers.push({
+        connectionId: socket.id,
+        username: data.username
+      });
+      console.log(connectedUsers);
+      io.emit('userHasLoggedIn', {
+        username: data.username
+      });
+      socket.emit('usernameAccepted');
+    }
   });
 });
 

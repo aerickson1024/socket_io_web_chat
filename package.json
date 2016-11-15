@@ -4,13 +4,17 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "browserify ./clientScripts/client.js -o ./client/bundle.js",
+    "watch": "watchify ./clientScripts/client.js -o ./client/bundle.js"
   },
   "author": "andy erickson",
   "license": "ISC",
   "dependencies": {
+    "browserify": "^13.1.1",
     "express": "^4.14.0",
+    "jquery": "^3.1.1",
     "socket.io": "^1.5.1",
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+    "watchify": "^3.7.0"
   }
 }
