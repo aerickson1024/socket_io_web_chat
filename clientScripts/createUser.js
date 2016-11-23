@@ -27,12 +27,16 @@ module.exports = function(socket) {
     console.log(data);
     $('#usersPanel').html('');
 
-    data.forEach(function(user) {
-      $('#usersPanel').append('<div class="usersList">' + user + '</div>');
-    });
+    if (data.length > 0) {
+      console.log('this was still hit....');
+      data.forEach(function(user) {
+        $('#usersPanel').append('<div class="usersList">' + user + '</div>');
+      });
 
-    if ($('#usersPanel').html()) {
       $('#usersPanel').show();
+    } else {
+      console.log('hiding usersPanel');
+      $('#usersPanel').hide();
     }
   });
 }
