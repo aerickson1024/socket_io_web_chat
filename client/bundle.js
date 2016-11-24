@@ -2,24 +2,36 @@
 var $ = require('jquery');
 var createUser = require('./createUser');
 var initialConfiguration = require('./initialConfiguration');
+var userMessages = require('./userMessages');
+var otherUsersMessages = require('./otherUsersMessages');
+
 var socket = io();
 var username = '';
 
 initialConfiguration(socket);
 createUser(socket);
+userMessages(socket);
+otherUsersMessages(socket);
 
-},{"./createUser":2,"./initialConfiguration":3,"jquery":4}],2:[function(require,module,exports){
+},{"./createUser":2,"./initialConfiguration":3,"./otherUsersMessages":4,"./userMessages":5,"jquery":6}],2:[function(require,module,exports){
 module.exports = function(socket) {
   $('#usernameButton').click(function() {
     var username = $('#usernameInput').val();
     socket.emit('submitUser', {
       username: username
     });
+  });
 
+  $('#usernameInput').keypress(function(event) {
+    if (event.keyCode == 13) {
+      var username = $('#usernameInput').val();
+      socket.emit('submitUser', {
+        username: username
+      });
+    }
   });
 
   socket.on('userHasLoggedIn', function(data) {
-    console.log('User has logged in - %s', data.username);
     $('#usersPanel').append('<div class="usersList">' + data.username + '</div>');
 
     $('#usersPanel').show();
@@ -34,19 +46,15 @@ module.exports = function(socket) {
   });
 
   socket.on('updateUsersList', function(data) {
-    console.log('Update users list');
-    console.log(data);
     $('#usersPanel').html('');
 
     if (data.length > 0) {
-      console.log('this was still hit....');
       data.forEach(function(user) {
         $('#usersPanel').append('<div class="usersList">' + user + '</div>');
       });
 
       $('#usersPanel').show();
     } else {
-      console.log('hiding usersPanel');
       $('#usersPanel').hide();
     }
   });
@@ -80,6 +88,60 @@ module.exports = function(socket) {
 }
 
 },{}],4:[function(require,module,exports){
+module.exports = function(socket) {
+  // MESSAGES INCOMING FROM OTHER USERS
+  socket.on('otherUsersMessages', function(data) {
+    appendUserMessage(data.message);
+    scrollWindow();
+  });
+
+  function appendUserMessage(message) {
+    $('#chatWindow').append('<div class="otherMessageBubble">' + message + '</div>');
+  }
+  function scrollWindow() {
+    var chatWindow = $('#chatWindow');
+    var height = chatWindow[0].scrollHeight;
+    chatWindow.scrollTop(height);
+  }
+}
+
+},{}],5:[function(require,module,exports){
+module.exports = function(socket) {
+  // TAKE VALUE FROM USER INPUT WHEN BUTTON IS CLICKED
+  $('#chatInputButton').click(function() {
+    var message = $('#chatMessageInput').val();
+    appendUserMessage(message);
+    clearInputWindow();
+    socket.emit('myMessage', message);
+  });
+
+  // TAKE VALUE FROM USER INPUT WHEN THE ENTER BUTTON IS PRESSED
+  $('#chatMessageInput').keypress(function(event) {
+    if (event.keyCode == 13) {
+      var message = $('#chatMessageInput').val();
+      appendUserMessage(message);
+      clearInputWindow();
+      socket.emit('myMessage', {
+        message: message
+      });
+    }
+  });
+
+  function appendUserMessage(message) {
+    $('#chatWindow').append('<div class="userMessageBubble">' + message + '</div>');
+    scrollWindow();
+  }
+  function scrollWindow() {
+    var chatWindow = $('#chatWindow');
+    var height = chatWindow[0].scrollHeight;
+    chatWindow.scrollTop(height);
+  }
+  function clearInputWindow() {
+    $('#chatMessageInput').val('');
+  }
+}
+
+},{}],6:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v3.1.1
  * https://jquery.com/

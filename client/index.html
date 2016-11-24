@@ -9,7 +9,7 @@
     <link href="styles/main.css" type="text/css" rel="stylesheet" />
   </head>
   <body>
-    <div class="row">
+    <div class="container">
       <div class="col-lg-3 col-md-3 col-sm-4 col-xs-4">
         <div class="panel panel-default">
           <div class="panel-heading">
@@ -17,14 +17,24 @@
           </div>
           <div id="usersPanel" class="panel-body"></div>
         </div>
-      </div>
-    </div>
-    <div id="inputArea" class="row">
-      <div class="col-lg-3 col-md-3 col-sm-4 col-xs-4">
-        <div class="input-group">
+        <div id="inputArea" class="input-group">
           <input id="usernameInput" type="text" class="form-control" placeholder="Enter chat name..." />
           <span class="input-group-btn">
             <button id="usernameButton" class="btn btn-default" type="button">Submit</button>
+          </span>
+        </div>
+      </div>
+      <div class="col-lg-9 col-md-9 col-sm-8 col-xs-8">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <div class="panel-title">Chat Message</div>
+          </div>
+          <div id="chatWindow" class="panel-body"></div>
+        </div>
+        <div class="input-group">
+          <input id="chatMessageInput" type="text" class="form-control" placeholder="Enter chat messages here..." />
+          <span class="input-group-btn">
+            <button id="chatInputButton" class="btn btn-default" type="button">Submit</button>
           </span>
         </div>
       </div>
