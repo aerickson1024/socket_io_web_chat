@@ -21,8 +21,10 @@ module.exports = function(socket) {
     $('#usersPanel').show();
   });
 
-  socket.on('usernameAccepted', function() {
+  socket.on('usernameAccepted', function(data) {
+    $(document).data('username', data.username);
     $('#inputArea').hide();
+    $('#chatInputGroup').show();
   });
 
   socket.on('usernameRejected', function() {

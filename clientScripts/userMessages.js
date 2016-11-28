@@ -4,7 +4,10 @@ module.exports = function(socket) {
     var message = $('#chatMessageInput').val();
     appendUserMessage(message);
     clearInputWindow();
-    socket.emit('myMessage', message);
+    socket.emit('myMessage', {
+      username: $(document).data('username'),
+      message: message
+    });
   });
 
   // TAKE VALUE FROM USER INPUT WHEN THE ENTER BUTTON IS PRESSED
@@ -14,14 +17,25 @@ module.exports = function(socket) {
       appendUserMessage(message);
       clearInputWindow();
       socket.emit('myMessage', {
+        username: $(document).data('username'),
         message: message
       });
     }
   });
 
   function appendUserMessage(message) {
-    $('#chatWindow').append('<div class="userMessageBubble">' + message + '</div>');
-    scrollWindow();
+    var username = $(document).data('username');
+    var activeUser = $(document).data('activeUser');
+
+    if (activeUser == username) {
+      $('#chatWindow > div.userMessageContainer:last-child').append('<div class="userMessageBubble">' + message + '</div>');
+      scrollWindow();
+    } else {
+      $('#chatWindow').append('<div class="userMessageContainer"></div>');
+      $('#chatWindow > div.userMessageContainer:last-child').append('<div class="userMessageBubble">' + message + '</div>');
+      $(document).data('activeUser', $(document).data('username'));
+      scrollWindow();
+    }
   }
   function scrollWindow() {
     var chatWindow = $('#chatWindow');

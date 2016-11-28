@@ -2,6 +2,7 @@ module.exports = function(socket) {
   // On page load do not show list of users unless there are
   // users to populate the list.
   $('#usersPanel').hide();
+  $('#chatInputGroup').hide();
 
   // Request all users currently logged in and chatting
   $.ajax({

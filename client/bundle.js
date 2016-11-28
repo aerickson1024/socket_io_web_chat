@@ -1,12 +1,13 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var $ = require('jquery');
-var createUser = require('./createUser');
 var initialConfiguration = require('./initialConfiguration');
+var createUser = require('./createUser');
 var userMessages = require('./userMessages');
 var otherUsersMessages = require('./otherUsersMessages');
 
 var socket = io();
-var username = '';
+$(document).data('username', '');
+$(document).data('activeUser', '');
 
 initialConfiguration(socket);
 createUser(socket);
@@ -37,8 +38,10 @@ module.exports = function(socket) {
     $('#usersPanel').show();
   });
 
-  socket.on('usernameAccepted', function() {
+  socket.on('usernameAccepted', function(data) {
+    $(document).data('username', data.username);
     $('#inputArea').hide();
+    $('#chatInputGroup').show();
   });
 
   socket.on('usernameRejected', function() {
@@ -65,6 +68,7 @@ module.exports = function(socket) {
   // On page load do not show list of users unless there are
   // users to populate the list.
   $('#usersPanel').hide();
+  $('#chatInputGroup').hide();
 
   // Request all users currently logged in and chatting
   $.ajax({
@@ -91,12 +95,24 @@ module.exports = function(socket) {
 module.exports = function(socket) {
   // MESSAGES INCOMING FROM OTHER USERS
   socket.on('otherUsersMessages', function(data) {
-    appendUserMessage(data.message);
+    appendUserMessage(data);
     scrollWindow();
   });
 
-  function appendUserMessage(message) {
-    $('#chatWindow').append('<div class="otherMessageBubble">' + message + '</div>');
+  function appendUserMessage(data) {
+    var username = data.username;
+    var activeUser = $(document).data('activeUser');
+
+    if (activeUser == username) {
+      $('#chatWindow > div.otherMessageContainer:last-child').append('<div class="otherMessageBubble">' + data.message + '</div>');
+      $('span.timestamp:last-child').html(data.timestamp);
+      scrollWindow();
+    } else {
+      $('#chatWindow').append('<div class="username">' + username + '<span class="timestamp">' + data.timestamp + '</span></div>')
+      $('#chatWindow').append('<div class="otherMessageContainer"></div>');
+      $('#chatWindow > div.otherMessageContainer:last-child').append('<div class="otherMessageBubble">' + data.message + '</div>');
+      $(document).data('activeUser', username);
+    }
   }
   function scrollWindow() {
     var chatWindow = $('#chatWindow');
@@ -112,7 +128,10 @@ module.exports = function(socket) {
     var message = $('#chatMessageInput').val();
     appendUserMessage(message);
     clearInputWindow();
-    socket.emit('myMessage', message);
+    socket.emit('myMessage', {
+      username: $(document).data('username'),
+      message: message
+    });
   });
 
   // TAKE VALUE FROM USER INPUT WHEN THE ENTER BUTTON IS PRESSED
@@ -122,14 +141,25 @@ module.exports = function(socket) {
       appendUserMessage(message);
       clearInputWindow();
       socket.emit('myMessage', {
+        username: $(document).data('username'),
         message: message
       });
     }
   });
 
   function appendUserMessage(message) {
-    $('#chatWindow').append('<div class="userMessageBubble">' + message + '</div>');
-    scrollWindow();
+    var username = $(document).data('username');
+    var activeUser = $(document).data('activeUser');
+
+    if (activeUser == username) {
+      $('#chatWindow > div.userMessageContainer:last-child').append('<div class="userMessageBubble">' + message + '</div>');
+      scrollWindow();
+    } else {
+      $('#chatWindow').append('<div class="userMessageContainer"></div>');
+      $('#chatWindow > div.userMessageContainer:last-child').append('<div class="userMessageBubble">' + message + '</div>');
+      $(document).data('activeUser', $(document).data('username'));
+      scrollWindow();
+    }
   }
   function scrollWindow() {
     var chatWindow = $('#chatWindow');

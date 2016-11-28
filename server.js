@@ -3,6 +3,7 @@ var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var _ = require('underscore');
+var moment = require('moment');
 var usersController = require('./server/api/usersController');
 var connectedUsers = [];
 
@@ -37,13 +38,17 @@ io.on('connection', function(socket) {
       io.emit('userHasLoggedIn', {
         username: data.username
       });
-      socket.emit('usernameAccepted');
+      socket.emit('usernameAccepted', {
+        username: data.username
+      });
     }
   });
 
   socket.on('myMessage', function(data) {
     socket.broadcast.emit('otherUsersMessages', {
-      message: data.message
+      username: data.username,
+      message: data.message,
+      timestamp: moment().format('hh:mm:ss a')
     });
   });
 });

@@ -1,11 +1,12 @@
 var $ = require('jquery');
-var createUser = require('./createUser');
 var initialConfiguration = require('./initialConfiguration');
+var createUser = require('./createUser');
 var userMessages = require('./userMessages');
 var otherUsersMessages = require('./otherUsersMessages');
 
 var socket = io();
-var username = '';
+$(document).data('username', '');
+$(document).data('activeUser', '');
 
 initialConfiguration(socket);
 createUser(socket);

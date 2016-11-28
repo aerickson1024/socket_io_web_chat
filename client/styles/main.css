@@ -42,25 +42,121 @@ div.usersList:nth-child(1n+2) {
   overflow-y: scroll;
 }
 
-.userMessageBubble {
-  margin-left: 25%;
+.username {
+  float: left;
+  clear: both;
+  margin-left: 10px;
+}
+
+.timestamp {
+  margin-left: 5px;
+  font-size: 10px;
+}
+
+.userMessageContainer {
+  width: 75%;
+  float: right;
+  clear: both;
+  margin-bottom: 25px;
+}
+
+.userMessageBubble:not(first-child):not(last-child) {
+  border-radius: 15px 3px 3px 15px;
+  display: inline-block;
+  padding: 5px 10px 5px 10px;
+  margin-bottom: 3px;
   float: right;
   clear: both;
   background-color: rgb(22, 136, 254);
   color: rgb(246, 250, 255);
 }
 
-.otherMessageBubble {
-  margin-right: 25%;
+.userMessageBubble:first-child,
+.userMessageBubble:last-child {
+  display: inline-block;
+  padding: 5px 10px 5px 10px;
+  margin-bottom: 3px;
+  float: right;
+  clear: both;
+  background-color: rgb(22, 136, 254);
+  color: rgb(246, 250, 255);
+}
+
+.userMessageBubble:first-child {
+  border-radius: 15px 15px 3px 15px;
+}
+
+.userMessageBubble:last-child {
+  border-radius: 15px 3px 15px 15px;
+}
+
+.userMessageBubble:only-child {
+  display: inline-block;
+  border-radius: 15px;
+  padding: 5px 10px 5px 10px;
+  margin-bottom: 3px;
+  float: right;
+  clear: both;
+  background-color: rgb(22, 136, 254);
+  color: rgb(246, 250, 255);
+}
+
+.otherMessageContainer {
+  width: 75%;
+  float: left;
+  clear: both;
+  margin-bottom: 25px;
+}
+
+.otherMessageBubble:not(first-child):not(last-child) {
+  border-radius: 3px 15px 15px 3px;
+  display: inline-block;
+  padding: 5px 10px 5px 10px;
+  margin-bottom: 3px;
   float: left;
   clear: both;
   background-color: rgb(230, 230, 235);
 }
 
-.userMessageBubble,
+.otherMessageBubble:first-child,
+.otherMessageBubble:last-child {
+  display: inline-block;
+  padding: 5px 10px 5px 10px;
+  margin-bottom: 3px;
+  float: left;
+  clear: both;
+  background-color: rgb(230, 230, 235);
+}
+
+.otherMessageBubble:first-child {
+  border-radius: 15px 15px 15px 3px;
+}
+
+.otherMessageBubble:last-child {
+  border-radius: 3px 15px 15px 15px;
+}
+
+.otherMessageBubble:only-child {
+  display: inline-block;
+  border-radius: 15px;
+  padding: 5px 10px 5px 10px;
+  margin-bottom: 3px;
+  float: left;
+  clear: both;
+  background-color: rgb(230, 230, 235);
+}
+
+/*.otherMessageBubble {
+  margin-right: 25%;
+  float: left;
+  clear: both;
+  background-color: rgb(230, 230, 235);
+}*/
+
+/*.userMessageBubble,
 .otherMessageBubble {
   display: inline-block;
   border-radius: 15px;
   padding: 5px 10px 5px 10px;
   margin-bottom: 25px;
-}
+}*/
