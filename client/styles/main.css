@@ -145,18 +145,3 @@ div.usersList:nth-child(1n+2) {
   clear: both;
   background-color: rgb(230, 230, 235);
 }
-
-/*.otherMessageBubble {
-  margin-right: 25%;
-  float: left;
-  clear: both;
-  background-color: rgb(230, 230, 235);
-}*/
-
-/*.userMessageBubble,
-.otherMessageBubble {
-  display: inline-block;
-  border-radius: 15px;
-  padding: 5px 10px 5px 10px;
-  margin-bottom: 25px;
-}*/
